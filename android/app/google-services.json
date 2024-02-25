@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "35356689493",
+    "project_id": "prasaran",
+    "storage_bucket": "prasaran.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35356689493:android:6d01b8b6adda39282e00dc",
+        "android_client_info": {
+          "package_name": "com.example.video_conferencing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWINGeiZfIUlx6pdS2u7MiOW2aZRlSk3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
