@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:video_conferencing/models/live-stream.dart';
 import 'package:video_conferencing/providers/user_provider.dart';
 import 'package:video_conferencing/resources/storage_methods.dart';
@@ -17,14 +18,19 @@ class FirestoreMethods {
     String channelId = '';
     try {
       if (title.isNotEmpty && image != null) {
-        if ((await _firestore.collection('livestream').doc(user.user.uid).get())
-            .exists) {
+        if (!((await _firestore
+                .collection('livestream')
+                .doc('${user.user.uid}${user.user.username}')
+                .get())
+            .exists)) {
+          print("saving to storage");
           String thumbnailUrl = await _storageMethods.uploadImageToStorage(
             'livestream-thumbnails',
             image,
             user.user.uid,
           );
-          String channelId = '${user.user.uid}${user.user.username}';
+          print("saved to storage");
+          channelId = '${user.user.uid}${user.user.username}';
           LiveStream liveStream = LiveStream(
             title: title,
             image: thumbnailUrl,
@@ -34,13 +40,13 @@ class FirestoreMethods {
             channelId: channelId,
             startedAt: DateTime.now(),
           );
-
+          print("Live straeam started");
           _firestore
               .collection('livestream')
               .doc(channelId)
               .set(liveStream.toMap());
         } else {
-          showSnackBar(context, "Two Live Streams cannot start at same time ");
+          showSnackBar(context, "Two Live Streams cannot start");
         }
       } else {
         showSnackBar(context, "Please Enter all the feilds");
@@ -48,6 +54,64 @@ class FirestoreMethods {
     } on FirebaseException catch (e) {
       showSnackBar(context, e.message!);
     }
+    print("Channel Id Returning");
     return channelId;
+  }
+
+  Future<void> chat(String text, String id, BuildContext context) async {
+    print("in chat befor provider");
+    final user = Provider.of<UserProvider>(context, listen: false);
+    try {
+      String commentId = const Uuid().v1();
+      print("comment ID : $commentId");
+      await _firestore
+          .collection('livestream')
+          .doc(id)
+          .collection('comments')
+          .doc(commentId)
+          .set({
+        'username': user.user.username,
+        'message': text,
+        'uid': user.user.uid,
+        'createdAt': DateTime.now(),
+        'commentId': commentId,
+      });
+    } on FirebaseException catch (e) {
+      print(e);
+      showSnackBar(context, e.message!);
+    }
+  }
+
+  Future<void> updateViewCount(String id, bool isIncrease) async {
+    try {
+      await _firestore.collection('livestream').doc(id).update({
+        'viewers': FieldValue.increment(isIncrease ? 1 : -1),
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> endLiveStream(String channelId) async {
+    try {
+      QuerySnapshot snap = await _firestore
+          .collection('livestream')
+          .doc(channelId)
+          .collection('comments')
+          .get();
+      for (int i = 0; i < snap.docs.length; i++) {
+        await _firestore
+            .collection('livestream')
+            .doc(channelId)
+            .collection('comments')
+            .doc(
+              ((snap.docs[i].data()! as dynamic)['commentId']),
+            )
+            .delete();
+      }
+      await _firestore.collection('livestream').doc(channelId).delete();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

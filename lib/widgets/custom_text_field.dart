@@ -3,11 +3,13 @@ import 'package:video_conferencing/utils/colors.dart';
 
 class CustomTextFeild extends StatelessWidget {
   final TextEditingController controller;
-  const CustomTextFeild({super.key, required this.controller});
+  final Function(String)? onTap;
+  const CustomTextFeild({super.key, required this.controller, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onSubmitted: onTap,
       controller: controller,
       decoration: const InputDecoration(
         focusedBorder: OutlineInputBorder(

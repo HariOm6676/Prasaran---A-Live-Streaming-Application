@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_conferencing/resources/auth_methods.dart';
+import 'package:video_conferencing/responsive/responsive.dart';
 import 'package:video_conferencing/screens/home_screen.dart';
 import 'package:video_conferencing/widgets/custom_button.dart';
 import 'package:video_conferencing/widgets/custom_text_field.dart';
@@ -52,56 +53,58 @@ class _SignupScreenState extends State<SignupScreen> {
       )),
       body: _isLoading
           ? const LoadingIndicator()
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.1,
-                    ),
-                    Text(
-                      "Email",
-                      style: GoogleFonts.rajdhani(
-                        fontWeight: FontWeight.bold,
+          : Responsive(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.1,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: CustomTextFeild(controller: _emailController),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "UserName",
-                      style: GoogleFonts.rajdhani(
-                        fontWeight: FontWeight.bold,
+                      Text(
+                        "Email",
+                        style: GoogleFonts.rajdhani(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: CustomTextFeild(controller: _usernameController),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "Password",
-                      style: GoogleFonts.rajdhani(
-                        fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: CustomTextFeild(controller: _emailController),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: CustomTextFeild(controller: _passwordController),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomButton(onTap: signUpUser, text: "SIGN UP")
-                  ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "UserName",
+                        style: GoogleFonts.rajdhani(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: CustomTextFeild(controller: _usernameController),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Password",
+                        style: GoogleFonts.rajdhani(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: CustomTextFeild(controller: _passwordController),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomButton(onTap: signUpUser, text: "SIGN UP")
+                    ],
+                  ),
                 ),
               ),
             ),
